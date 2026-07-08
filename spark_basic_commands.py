@@ -10,3 +10,5 @@ spark.catalog.tableExists("finance.transactions")
 spark.sql("CREATE DATABASE IF NOT EXISTS retail")
 # Use DESCRIBE EXTENDED to audit your tables
 spark.sql("DESCRIBE EXTENDED retail.orders");
+# Display table with current catalog and current schema (quick check where it refers right now)
+spark.sql("SELECT current_catalog(), current_schema()");
