@@ -39,3 +39,24 @@ SELECT
     cast(unbase64(value) AS STRING) AS decoded_value
 FROM kafka_events_bronze_raw
 LIMIT 5;""")
+
+# Explode the array field
+spark.sql("""
+CREATE OR REPLACE TABLE bronze_explode_array AS
+SELECT
+    decoded_key,
+    array_size(value.items) AS number_elements_in_array,
+    explode(value.items) AS item_in_array,
+    value.items
+FROM kafka_events_bronze_struct
+ORDER BY number_elements_in_array DESC;
+""")
+#
+spark.sql("""
+SELECT
+    json_variant_value,
+    json_variant_value:device :: STRING,  -- Obtain the value of device and cast to a string
+    json_variant_value:items
+FROM kafka_events_bronze_variant
+LIMIT 10
+""")
